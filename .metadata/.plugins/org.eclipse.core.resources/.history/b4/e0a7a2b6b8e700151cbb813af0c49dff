@@ -1,0 +1,11 @@
+package Homework4;
+
+public class ThreadDriver {
+	
+	
+	static DatagramSendReceive d = new DatagramSendReceive();
+	public static void main(String[] args){
+		d.init();
+	}
+
+}

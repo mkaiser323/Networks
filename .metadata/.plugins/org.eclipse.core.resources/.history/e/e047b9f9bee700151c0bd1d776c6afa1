@@ -1,0 +1,31 @@
+package Homework4;
+
+import java.net.SocketException;
+import java.util.Scanner;
+
+public class ThreadDriver {
+	
+	
+	static DatagramSendReceive d = new DatagramSendReceive();
+	public static void main(String[] args){
+		byte[] ip = {(byte)192, (byte)168, (byte)1, (byte)126};
+		String message = "test";
+		int port = 63000;
+		try {
+			d.createSocket(port);
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		d.init();
+		/*Scanner keyboard = new Scanner(System.in);
+		while(true){
+			message = keyboard.nextLine();
+			d.send(message, port, ip);			
+		}*/
+				
+	}
+
+}
