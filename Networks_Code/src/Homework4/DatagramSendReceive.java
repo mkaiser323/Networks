@@ -1,6 +1,8 @@
 package Homework4;
 
 import java.net.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 import java.io.*;
 
@@ -31,14 +33,13 @@ import java.io.*;
  * 
  */
 
-
 public class DatagramSendReceive extends Thread {
 
 	
 	//static int[] ip = {127, 0, 0, 1};//loopback address
 	static int port = ThreadDriver.port;
 	
-	static boolean debugging = true;
+	static boolean debugging = false;
 	static DatagramSocket socket;
 	//static int port; 
 	DatagramSendReceive receiveThread, sendThread;
@@ -46,6 +47,8 @@ public class DatagramSendReceive extends Thread {
 	byte[] ip = {(byte)127, (byte)0, (byte)0, (byte)1};
 
 	static int threadCount = 0;
+	
+	static HashMap<InetAddress, String> addresses = new HashMap<InetAddress, String>();
 
 	
 	/**
@@ -78,7 +81,6 @@ public class DatagramSendReceive extends Thread {
 			createSocket(port);
 			DatagramSendReceive.port = port;
 		} catch (SocketException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -142,7 +144,6 @@ public class DatagramSendReceive extends Thread {
 			createSocket(port);
 			System.out.println("Receive Thread is ready. Waiting for messages...");
 		} catch (SocketException e1) {
-			// TODO Auto-generated catch block
 			//e1.printStackTrace();
 		}
 
@@ -153,8 +154,26 @@ public class DatagramSendReceive extends Thread {
 				print(this.getName() + " waiting for next message...");
 				socket.receive(receivePacket);
 				print("new message received");
-				//once a new message has been received, I will create a new receivethread
-				addReceiveThread();
+				//once a new message has been received, if it is from a new IP address. I will create a new receivethread
+				InetAddress new_IP = receivePacket.getAddress();
+				String name = "stranger";
+				String string_ip = new_IP.toString();
+				String[] string_ip_array = string_ip.split(".");
+				byte[] byte_ip = new byte[4];
+				
+				print(string_ip_array.length + "");
+				
+				for(int i = 0; i < string_ip_array.length; i++){
+					print(string_ip_array[i]);
+					byte_ip[i] = (byte)Integer.parseInt(string_ip_array[i]);
+				}
+				
+				
+				if(!addresses.containsKey(new_IP)){
+					print("****adding new receive thread****");
+
+					addReceiveThread(byte_ip, new_IP, name);					
+				}
 
 				String message = new String(receivePacket.getData());
 				System.out.println(this.getName() + " : " + message);
@@ -163,7 +182,6 @@ public class DatagramSendReceive extends Thread {
 					socket.close();
 				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				//e.printStackTrace();
 				//socket.close();
 			}
@@ -172,10 +190,15 @@ public class DatagramSendReceive extends Thread {
 	}
 
 	
-	private void addReceiveThread(){
-		(new DatagramSendReceive(true, port, ip[0], ip[1], ip[2], ip[3])).start();
+	private void addReceiveThread(byte[] byte_ip, InetAddress inet, String name){
+		addresses.put(inet, name);
+		
+		print("************contains key: "+ addresses.containsKey(inet));
+		
+		(new DatagramSendReceive(true, port, byte_ip[0], byte_ip[1], byte_ip[2], byte_ip[3])).start();
 		threadCount++;
-		print("number of threads: "+ threadCount);
+		print("number of threads: "+ addresses.size());
+		print(addresses.values().toString());
 	}
 
 	private static DatagramPacket createDatagram(String message, int port, byte[] ip) throws UnknownHostException{

@@ -1,0 +1,194 @@
+package Homework4;
+
+import java.net.*;
+import java.util.Scanner;
+import java.io.*;
+
+
+/*
+ * Homework 4:
+ * Write a Java program that uses java.net.DatagramSocket which is 
+ * able to send and receive java.net.DatagramPackets. 
+ * The content of the packets will be Strings.
+ *  Your class must be named DatagramSendReceive. 
+ */
+
+
+
+/*
+ * Homework 5:
+ * 1- main window for initiating chat sessions
+ * 2- separate windows for each chat session
+ * 3- each window will have the following components:
+ * 	a- title of the window will be the IP address of the other side of the message
+ * 	b- a section to display the messagine interaction; both sent and received messages
+ * 	c- section to type the reply
+ * 	d- button to send the reply
+ * 	e- button to close and end the messaging session
+ * 
+ * 4- IP lookup protocol:
+ * 	a- 
+ * 
+ */
+
+
+public class DatagramSendReceive extends Thread {
+
+	
+	//static int[] ip = {127, 0, 0, 1};//loopback address
+	static int port = ThreadDriver.port;
+	
+	static boolean debugging = true;
+	static DatagramSocket socket;
+	//static int port; 
+	DatagramSendReceive receiveThread, sendThread;
+	boolean isReceive;//true for receiving thread, false for sending thread
+	byte[] ip = {(byte)127, (byte)0, (byte)0, (byte)1};
+
+	static int threadCount = 0;
+
+	
+	/**
+	 * This constructor is used to create and start a thread. 
+	 * 
+	 * @param isReceive: if true, the thread will be treated as a receiving thread. 
+	 * @param port: The port number will be used to create the socket
+	 * 
+	 * the ip address of the other device that you are communicating with, in the form a.b.c.d
+	 * 
+	 * @param a
+	 * @param b
+	 * @param c
+	 * @param d
+	 */
+	public DatagramSendReceive(boolean isReceive, int port, int a, int b, int c, int d){
+		this.isReceive = isReceive;
+		setSocket(port);
+		setIP(a, b, c, d);
+		//this.start();
+	}
+
+	public void setSocket(int port){
+
+		if(socket != null){
+			socket.close();
+		}
+
+		try {
+			createSocket(port);
+			DatagramSendReceive.port = port;
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public void setIP(int a, int b, int c, int d){
+		ip[0] = (byte)a;
+		ip[1] = (byte)b;
+		ip[2] = (byte)c;
+		ip[3] = (byte)d;
+	}
+
+
+	private void createSocket(int port) throws SocketException{
+		socket = new DatagramSocket(port);	
+	}
+
+
+	@Override
+	public void run() {
+		print("In run");
+		if(isReceive){
+			print("receiving messages");
+			receive();
+		} else {
+			send();
+		}
+	}
+
+
+	private void send(){
+		String message;
+		while(true){
+			try {
+				System.out.println("Type a message and hit enter to send. Type 'quit' to quit: ");
+				Scanner keyboard = new Scanner(System.in);
+				message = keyboard.nextLine();
+				if (message.equalsIgnoreCase("quit")){
+					keyboard.close();
+					socket.close();
+					break;
+				}
+				DatagramPacket datagramPacket = createDatagram(message, port, ip);
+				socket.send(datagramPacket);
+
+			} catch (SocketException e) {
+				e.printStackTrace();
+			} catch (UnknownHostException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+
+	private void receive(){
+		
+		DatagramPacket receivePacket = new DatagramPacket(new byte[1024], 1024);
+		try {
+			print("inside try block of receive method");
+			createSocket(port);
+			System.out.println("Receive Thread is ready. Waiting for messages...");
+		} catch (SocketException e1) {
+			// TODO Auto-generated catch block
+			//e1.printStackTrace();
+		}
+
+		print("right before entering while loop");
+		while(true){
+			try {
+				
+				print(this.getName() + " waiting for next message...");
+				socket.receive(receivePacket);
+				print("new message received");
+				//once a new message has been received, I will create a new receivethread
+				addReceiveThread();
+
+				String message = new String(receivePacket.getData());
+				System.out.println(this.getName() + " : " + message);
+				receivePacket = new DatagramPacket(new byte[1024], 1024);
+				if(message.equals("bye")){
+					socket.close();
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				//e.printStackTrace();
+				//socket.close();
+			}
+		}
+
+	}
+
+	
+	private void addReceiveThread(){
+		(new DatagramSendReceive(true, port, ip[0], ip[1], ip[2], ip[3])).start();
+		threadCount++;
+		print("number of threads: "+ threadCount);
+	}
+
+	private static DatagramPacket createDatagram(String message, int port, byte[] ip) throws UnknownHostException{
+		InetAddress ip_address = InetAddress.getByAddress(ip);
+		byte[] message_bytes = message.getBytes();
+		DatagramPacket datagramPacket = new DatagramPacket(message_bytes, message_bytes.length, ip_address, port);
+		return datagramPacket;
+	}
+
+
+	private static void print(String s){
+		if(debugging){
+			System.out.println(s);
+		}
+	}
+}
