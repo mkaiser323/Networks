@@ -1,0 +1,12 @@
+package Homework4;
+
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+
+import javax.swing.JFrame;
+
+public class ChatWindow extends JFrame {
+	
+
+	
+}

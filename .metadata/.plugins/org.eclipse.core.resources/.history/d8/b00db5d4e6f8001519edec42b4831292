@@ -191,7 +191,10 @@ public class DatagramSendReceive extends Thread {
 
 	
 	private void addReceiveThread(byte[] byte_ip, InetAddress inet, String name){
-		addresses.put(inet, name);		
+		addresses.put(inet, name);
+		
+		print("************contains key: "+ addresses.containsKey(inet));
+		
 		(new DatagramSendReceive(true, port, byte_ip[0], byte_ip[1], byte_ip[2], byte_ip[3])).start();
 		threadCount++;
 		print("number of threads: "+ addresses.size());
@@ -204,6 +207,7 @@ public class DatagramSendReceive extends Thread {
 		DatagramPacket datagramPacket = new DatagramPacket(message_bytes, message_bytes.length, ip_address, port);
 		return datagramPacket;
 	}
+
 
 	private static void print(String s){
 		if(debugging){
