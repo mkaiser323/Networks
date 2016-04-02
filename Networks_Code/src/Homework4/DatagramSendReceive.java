@@ -198,7 +198,7 @@ public class DatagramSendReceive extends Thread {
 		print(addresses.values().toString());
 	}
 
-	private static DatagramPacket createDatagram(String message, int port, byte[] ip) throws UnknownHostException{
+	public static DatagramPacket createDatagram(String message, int port, byte[] ip) throws UnknownHostException{
 		InetAddress ip_address = InetAddress.getByAddress(ip);
 		byte[] message_bytes = message.getBytes();
 		DatagramPacket datagramPacket = new DatagramPacket(message_bytes, message_bytes.length, ip_address, port);

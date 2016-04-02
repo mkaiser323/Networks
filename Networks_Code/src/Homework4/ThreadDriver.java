@@ -15,5 +15,6 @@ public class ThreadDriver {
 	public static void main(String[] args){
 		receiveThread.start();
 		sendThread.start();
+		MainWindow m = new MainWindow();
 	}
 }

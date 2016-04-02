@@ -1,0 +1,87 @@
+package Homework4;
+
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+import Homework5.DatagramSendReceive;
+
+public class MainWindow extends JFrame implements ActionListener, KeyListener{
+
+	
+	private JTextField ipTxt;
+	private JLabel ipLbl;
+	private JButton startChatBtn;
+	private JPanel mainPanel;
+	
+	
+	public static void main(String[] args){
+		MainWindow m = new MainWindow();
+	}
+	
+	/** default values for main window **/
+	public MainWindow()
+	{
+		setTitle("Main Window");
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		initializeComponents();
+		pack();
+		setVisible(true);
+		setResizable(false);
+		
+	}
+	
+	/** Initialize all default components of the chat program **/
+	private void initializeComponents() 
+	{
+		ipTxt = new JTextField(20);
+		Font font = new Font("Verdana", Font.BOLD, 20);
+		ipTxt.setFont(font);
+		ipTxt.addKeyListener(this);
+		ipLbl = new JLabel("Enter IP Address:");
+		startChatBtn = new JButton("Start Chat");
+		startChatBtn.addActionListener(this);
+		
+		mainPanel = new JPanel();
+		mainPanel.add(ipLbl);
+		mainPanel.add(ipTxt);
+		mainPanel.add(startChatBtn);
+		
+		add(mainPanel);
+		
+	}
+	
+	
+	
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}	
+}
