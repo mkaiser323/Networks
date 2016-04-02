@@ -157,7 +157,7 @@ public class DatagramSendReceive extends Thread {
 				addReceiveThread();
 
 				String message = new String(receivePacket.getData());
-				System.out.println(this.getName() + " : " + message);
+				System.out.println(message);
 				receivePacket = new DatagramPacket(new byte[1024], 1024);
 				if(message.equals("bye")){
 					socket.close();

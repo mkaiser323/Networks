@@ -154,17 +154,17 @@ public class DatagramSendReceive extends Thread {
 				socket.receive(receivePacket);
 				print("new message received");
 				//once a new message has been received, I will create a new receivethread
-				addReceiveThread();
+				//addReceiveThread();
 
 				String message = new String(receivePacket.getData());
-				System.out.println(this.getName() + " : " + message);
+				System.out.println(message);
 				receivePacket = new DatagramPacket(new byte[1024], 1024);
 				if(message.equals("bye")){
 					socket.close();
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				//e.printStackTrace();
+				e.printStackTrace();
 				//socket.close();
 			}
 		}
