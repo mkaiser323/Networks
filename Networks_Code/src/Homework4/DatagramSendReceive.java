@@ -14,16 +14,40 @@ import java.io.*;
  */
 
 
+
+/*
+ * Homework 5:
+ * 1- main window for initiating chat sessions
+ * 2- separate windows for each chat session
+ * 3- each window will have the following components:
+ * 	a- title of the window will be the IP address of the other side of the message
+ * 	b- a section to display the messagine interaction; both sent and received messages
+ * 	c- section to type the reply
+ * 	d- button to send the reply
+ * 	e- button to close and end the messaging session
+ * 
+ * 4- IP lookup protocol:
+ * 	a- 
+ * 
+ */
+
+
 public class DatagramSendReceive extends Thread {
 
+	
+	//static int[] ip = {127, 0, 0, 1};//loopback address
+	static int port = ThreadDriver.port;
+	
+	static boolean debugging = true;
 	static DatagramSocket socket;
-	static int port; 
+	//static int port; 
 	DatagramSendReceive receiveThread, sendThread;
 	boolean isReceive;//true for receiving thread, false for sending thread
 	byte[] ip = {(byte)127, (byte)0, (byte)0, (byte)1};
 
+	static int threadCount = 0;
 
-
+	
 	/**
 	 * This constructor is used to create and start a thread. 
 	 * 
@@ -45,11 +69,11 @@ public class DatagramSendReceive extends Thread {
 	}
 
 	public void setSocket(int port){
-		
+
 		if(socket != null){
 			socket.close();
 		}
-		
+
 		try {
 			createSocket(port);
 			DatagramSendReceive.port = port;
@@ -74,20 +98,15 @@ public class DatagramSendReceive extends Thread {
 
 	@Override
 	public void run() {
-		
+		print("In run");
 		if(isReceive){
+			print("receiving messages");
 			receive();
-					} else {
+		} else {
 			send();
 		}
 	}
-	
-	private static DatagramPacket createDatagram(String message, int port, byte[] ip) throws UnknownHostException{
-		InetAddress ip_address = InetAddress.getByAddress(ip);
-		byte[] message_bytes = message.getBytes();
-		DatagramPacket datagramPacket = new DatagramPacket(message_bytes, message_bytes.length, ip_address, port);
-		return datagramPacket;
-	}
+
 
 	private void send(){
 		String message;
@@ -116,18 +135,26 @@ public class DatagramSendReceive extends Thread {
 
 
 	private void receive(){
+		
 		DatagramPacket receivePacket = new DatagramPacket(new byte[1024], 1024);
 		try {
+			print("inside try block of receive method");
 			createSocket(port);
 			System.out.println("Receive Thread is ready. Waiting for messages...");
 		} catch (SocketException e1) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			//e1.printStackTrace();
 		}
+
+		print("right before entering while loop");
 		while(true){
 			try {
-
+				
+				print(this.getName() + " waiting for next message...");
 				socket.receive(receivePacket);
+				print("new message received");
+				//once a new message has been received, I will create a new receivethread
+				//addReceiveThread();
 
 				String message = new String(receivePacket.getData());
 				System.out.println(message);
@@ -138,9 +165,30 @@ public class DatagramSendReceive extends Thread {
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-				socket.close();
+				//socket.close();
 			}
 		}
+
+	}
+
 	
+	private void addReceiveThread(){
+		(new DatagramSendReceive(true, port, ip[0], ip[1], ip[2], ip[3])).start();
+		threadCount++;
+		print("number of threads: "+ threadCount);
+	}
+
+	private static DatagramPacket createDatagram(String message, int port, byte[] ip) throws UnknownHostException{
+		InetAddress ip_address = InetAddress.getByAddress(ip);
+		byte[] message_bytes = message.getBytes();
+		DatagramPacket datagramPacket = new DatagramPacket(message_bytes, message_bytes.length, ip_address, port);
+		return datagramPacket;
+	}
+
+
+	private static void print(String s){
+		if(debugging){
+			System.out.println(s);
+		}
 	}
 }

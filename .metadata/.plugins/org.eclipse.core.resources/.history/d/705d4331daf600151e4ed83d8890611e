@@ -1,0 +1,13 @@
+package Homework4;
+
+import javax.swing.JApplet;
+
+public class ChatFrame extends JApplet {
+
+	static final int width = 800, height = 600;
+	
+	
+	public void init(){
+		setSize(width, height);
+	}
+}

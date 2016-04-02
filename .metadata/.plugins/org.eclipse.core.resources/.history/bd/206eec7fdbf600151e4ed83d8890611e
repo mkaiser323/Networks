@@ -1,0 +1,35 @@
+package Homework4;
+
+import javax.swing.JApplet;
+
+/*
+ * Homework 5:
+ * 1- main window for initiating chat sessions
+ * 2- separate windows for each chat session (this class)
+ * 3- each window will have the following components:
+ * 	a- title of the window will be the IP address of the other side of the message
+ * 	b- a section to display the messaging interaction; both sent and received messages
+ * 	c- section to type the reply
+ * 	d- button to send the reply
+ * 	e- button to close and end the messaging session
+ * 
+ */
+
+
+
+/**
+ * This window will open up every time a new chat session is initiated
+ * @author mahedikaiser
+ *
+ */
+
+public class NewSession extends JApplet {
+
+	static final int width = 800, height = 600;
+	
+	
+	public void init(){
+		setSize(width, height);
+		this.setName("Chat Window");
+	}
+}
