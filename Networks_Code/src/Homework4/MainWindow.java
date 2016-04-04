@@ -67,6 +67,8 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener{
 	private void startNewChat(){
 		if(!ipTxt.getText().equals("")){
 			
+			byte[] ip = {127, 0, 0, 1}; //ChatWindow.ipBytes(ipTxt.getText());
+			
 			//create SendThread and receive thread for the new chat window:
 			DatagramSendReceive sendThread = new DatagramSendReceive(false, port, ip[0], ip[1], ip[2], ip[3]);
 			DatagramSendReceive receiveThread = new DatagramSendReceive(true, port, ip[0], ip[1], ip[2], ip[3]);
@@ -74,7 +76,7 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener{
 			 * remember to change the ip addresses to be set dynamically depending on the ip address typed in the MainWindow
 			 */			
 			
-			new ChatWindow(ipTxt.getText(), sendThread, receiveThread);
+			new ChatWindow(ip, ipTxt.getText(), sendThread, receiveThread);
 		}
 	}
 	

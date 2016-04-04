@@ -39,7 +39,7 @@ public class DatagramSendReceive extends Thread {
 	//static int[] ip = {127, 0, 0, 1};//loopback address
 	static int port = ThreadDriver.port;
 	
-	static boolean debugging = false;
+	static boolean debugging = true;
 	static DatagramSocket socket;
 	//static int port; 
 	DatagramSendReceive receiveThread, sendThread;
@@ -122,7 +122,9 @@ public class DatagramSendReceive extends Thread {
 					socket.close();
 					break;
 				}
+				print("sending to port " + port + ", " + "ip " + ip);
 				DatagramPacket datagramPacket = createDatagram(message, port, ip);
+				print(datagramPacket.toString());
 				socket.send(datagramPacket);
 
 			} catch (SocketException e) {
@@ -171,7 +173,6 @@ public class DatagramSendReceive extends Thread {
 				
 				if(!addresses.containsKey(new_IP)){
 					print("****adding new receive thread****");
-
 					addReceiveThread(byte_ip, new_IP, name);					
 				}
 
@@ -188,7 +189,6 @@ public class DatagramSendReceive extends Thread {
 		}
 
 	}
-
 	
 	private void addReceiveThread(byte[] byte_ip, InetAddress inet, String name){
 		addresses.put(inet, name);		

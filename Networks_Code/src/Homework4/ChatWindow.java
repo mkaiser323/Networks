@@ -35,11 +35,13 @@ public class ChatWindow extends JFrame implements KeyListener, ActionListener{
 	private byte[] otherIp;
 	private int port = 64000;
 
-	public ChatWindow(String title, DatagramSendReceive sendThread, DatagramSendReceive receiveThread){
+	public ChatWindow(byte[] otherIp, String title, DatagramSendReceive sendThread, DatagramSendReceive receiveThread){
 
-		this.otherIp = ipBytes(title);
+		this.otherIp = otherIp;
+
 		this.sendThread = sendThread;//for now, I am not starting the sendthread because i do not need its run method
 		this.receiveThread = receiveThread;
+		sendThread.start();
 		receiveThread.start();//starting this thread right away because it has to start listening right away
 		setTitle(title);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -88,7 +90,10 @@ public class ChatWindow extends JFrame implements KeyListener, ActionListener{
 		typeMessage.setText("");
 
 		//next, send it through the socket in the following format: thread.socket.send(datagramPacket)
+		print("sending to port " + port + ", " + "ip " + otherIp);
+		byte[] otherIp = {(byte)127,(byte)0,(byte)0, (byte)1};
 		sendThread.socket.send(DatagramSendReceive.createDatagram(message, port, otherIp));
+		print("message sent to port " + port + ", " + "ip " + otherIp);
 
 
 	}
@@ -127,13 +132,30 @@ public class ChatWindow extends JFrame implements KeyListener, ActionListener{
 
 	}
 
-	private byte[] ipBytes(String ip_string){
+	public static byte[] ipBytes(String ip_string){
 		String[] ip_string_array = ip_string.split(".");
 		byte[] ip_bytes = new byte[4];
-		for(int i = 0; i < ip_bytes.length; i++){
+		print("ip string: "+ip_string);
+		print("inside ipBytes method");
+		print("Array length: "+ ip_string.split(".").length);
+		for(int i = 0; i < ip_string_array.length; i++){
+			print("ip[i]: "+(byte) Integer.parseInt(ip_string_array[i]) + "");
 			ip_bytes[i]=(byte) Integer.parseInt(ip_string_array[i]);
 		}
 		return ip_bytes;
+	}
+	
+	static boolean debugging =  true;
+	
+	private static void print(String s){
+		if(debugging){
+			System.out.println(s);
+		}
+	}
+	
+	
+	private static void ip(byte[] ip){
+		System.out.println("IP: " +ip[0] + "." +ip[1] + "." +ip[2] + "." +ip[3]);
 	}
 	
 }
