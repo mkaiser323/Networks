@@ -32,14 +32,12 @@ public class ChatWindow extends JFrame implements KeyListener, ActionListener{
 	private DatagramSendReceive receiveThread;//this will be used to access the associated thread
 
 	private byte[] otherIp;
-	private int port = MainWindow.port;
+	private int port = 64000;
 
-	public ChatWindow(byte[] otherIp, String ip, int port){
+	public ChatWindow(byte[] otherIp, String ip){
 
-		
-		String title = "IP: " + ip + " Port: " + port;
 		this.otherIp = otherIp;
-		setTitle(title);
+		setTitle(ip);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setSize(400, 400);
 		initializeComponents();
@@ -89,7 +87,7 @@ public class ChatWindow extends JFrame implements KeyListener, ActionListener{
 		//next, send it through the socket in the following format: thread.socket.send(datagramPacket)
 		print("sending to port " + port + ", " + "ip " + otherIp);
 		//byte[] otherIp = {(byte)127,(byte)0,(byte)0, (byte)1};
-		DatagramSendReceive.socket.send(DatagramSendReceive.createDatagram(message, port, otherIp));
+		sendThread.socket.send(DatagramSendReceive.createDatagram(message, port, otherIp));
 		print("message sent to port " + port + ", " + "ip " + otherIp);
 	}
 	
@@ -123,13 +121,7 @@ public class ChatWindow extends JFrame implements KeyListener, ActionListener{
 	@Override
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
-				int code = e.getKeyCode();
-				if(code == KeyEvent.VK_ENTER){
-					try{
-						sendMessage();
-					} catch(Exception exception){
-					}
-				}
+
 	}
 
 	@Override

@@ -163,8 +163,6 @@ public class DatagramSendReceive extends Thread {
 				String[] string_ip_array = string_ip.split(".");
 				byte[] byte_ip = new_IP.getAddress();
 				
-				int port = receivePacket.getPort();
-				
 				
 				print(string_ip_array.length + "");
 				
@@ -173,11 +171,12 @@ public class DatagramSendReceive extends Thread {
 //					byte_ip[i] = (byte)Integer.parseInt(string_ip_array[i]);
 //				}
 				
+				
 				if(!chatWindows.containsKey(string_ip)){
 					print("****adding new receive thread****");
 					//addReceiveThread(byte_ip, new_IP, name);	
 					//call constructor for Chat window
-					new ChatWindow(byte_ip, string_ip, port);
+					new ChatWindow(byte_ip, string_ip);
 				}
 
 				String message = new String(receivePacket.getData());

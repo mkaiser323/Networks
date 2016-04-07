@@ -173,6 +173,7 @@ public class DatagramSendReceive extends Thread {
 //					byte_ip[i] = (byte)Integer.parseInt(string_ip_array[i]);
 //				}
 				
+				
 				if(!chatWindows.containsKey(string_ip)){
 					print("****adding new receive thread****");
 					//addReceiveThread(byte_ip, new_IP, name);	

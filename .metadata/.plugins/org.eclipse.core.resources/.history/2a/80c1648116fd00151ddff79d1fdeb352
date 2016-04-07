@@ -22,7 +22,7 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener{
 	private JPanel mainPanel;
 	
 	private static int[] ip = {127, 0, 0, 1};
-	public static int port = 64000;
+	private static int port = 64000;
 	
 	public static DatagramSendReceive receiveThread = new DatagramSendReceive(true, port, ip[0], ip[1], ip[2], ip[3]);
 	
@@ -76,7 +76,7 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener{
 			 * remember to change the ip addresses to be set dynamically depending on the ip address typed in the MainWindow
 			 */			
 			System.out.println("Right before creating window: " +ipTxt.getText());
-			new ChatWindow(ip, ipTxt.getText(), port);
+			new ChatWindow(ip, ipTxt.getText());
 			System.out.println("Initial Chat Window created");
 		}
 	}
@@ -93,10 +93,8 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener{
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		int code = e.getKeyCode();
-		if(code == KeyEvent.VK_ENTER){
-			startNewChat();
-		}		
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
