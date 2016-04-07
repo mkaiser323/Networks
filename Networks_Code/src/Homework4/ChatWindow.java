@@ -30,24 +30,19 @@ public class ChatWindow extends JFrame implements KeyListener, ActionListener{
 
 	private DatagramSendReceive sendThread;//this will be used to access the associated thread
 	private DatagramSendReceive receiveThread;//this will be used to access the associated thread
-	private DatagramPacket datagramPacket;//this will be used to send the datagram packet through the thread
 
 	private byte[] otherIp;
 	private int port = 64000;
 
-	public ChatWindow(byte[] otherIp, String title, DatagramSendReceive sendThread, DatagramSendReceive receiveThread){
+	public ChatWindow(byte[] otherIp, String ip){
 
 		this.otherIp = otherIp;
-
-		this.sendThread = sendThread;//for now, I am not starting the sendthread because i do not need its run method
-		this.receiveThread = receiveThread;
-		sendThread.start();
-		receiveThread.start();//starting this thread right away because it has to start listening right away
-		setTitle(title);
+		setTitle(ip);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setSize(800, 800);
+		setSize(400, 400);
 		initializeComponents();
 		setVisible(true);
+		DatagramSendReceive.chatWindows.put(ip, this);
 	}
 
 	private void initializeComponents(){
@@ -58,7 +53,7 @@ public class ChatWindow extends JFrame implements KeyListener, ActionListener{
 		messageArea.setFont(font);
 		typeMessage.setFont(font);
 		typeMessage.addKeyListener(this);
-		messageArea.setBackground(Color.cyan);
+		//messageArea.setBackground(Color.cyan);
 		messageArea.setEditable(false);
 
 		sendBtn = new JButton("Send");
@@ -91,11 +86,14 @@ public class ChatWindow extends JFrame implements KeyListener, ActionListener{
 
 		//next, send it through the socket in the following format: thread.socket.send(datagramPacket)
 		print("sending to port " + port + ", " + "ip " + otherIp);
-		byte[] otherIp = {(byte)127,(byte)0,(byte)0, (byte)1};
+		//byte[] otherIp = {(byte)127,(byte)0,(byte)0, (byte)1};
 		sendThread.socket.send(DatagramSendReceive.createDatagram(message, port, otherIp));
 		print("message sent to port " + port + ", " + "ip " + otherIp);
-
-
+	}
+	
+	
+	public void receive(String message){
+		messageArea.setText(messageArea.getText() + "\n"+ message);
 	}
 
 	@Override

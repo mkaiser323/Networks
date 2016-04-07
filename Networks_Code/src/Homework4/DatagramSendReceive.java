@@ -48,8 +48,7 @@ public class DatagramSendReceive extends Thread {
 
 	static int threadCount = 0;
 	
-	static HashMap<InetAddress, String> addresses = new HashMap<InetAddress, String>();
-
+	static HashMap<String, ChatWindow> chatWindows = new HashMap<String, ChatWindow>();
 	
 	/**
 	 * This constructor is used to create and start a thread. 
@@ -158,26 +157,31 @@ public class DatagramSendReceive extends Thread {
 				print("new message received");
 				//once a new message has been received, if it is from a new IP address. I will create a new receivethread
 				InetAddress new_IP = receivePacket.getAddress();
-				String name = "stranger";
 				String string_ip = new_IP.toString();
+				string_ip = string_ip.substring(1, string_ip.length());
+				System.out.println(string_ip);
 				String[] string_ip_array = string_ip.split(".");
-				byte[] byte_ip = new byte[4];
+				byte[] byte_ip = new_IP.getAddress();
+				
 				
 				print(string_ip_array.length + "");
 				
-				for(int i = 0; i < string_ip_array.length; i++){
-					print(string_ip_array[i]);
-					byte_ip[i] = (byte)Integer.parseInt(string_ip_array[i]);
-				}
+//				for(int i = 0; i < string_ip_array.length; i++){
+//					print(string_ip_array[i]);
+//					byte_ip[i] = (byte)Integer.parseInt(string_ip_array[i]);
+//				}
 				
 				
-				if(!addresses.containsKey(new_IP)){
+				if(!chatWindows.containsKey(string_ip)){
 					print("****adding new receive thread****");
-					addReceiveThread(byte_ip, new_IP, name);					
+					//addReceiveThread(byte_ip, new_IP, name);	
+					//call constructor for Chat window
+					new ChatWindow(byte_ip, string_ip);
 				}
 
 				String message = new String(receivePacket.getData());
 				System.out.println(this.getName() + " : " + message);
+				chatWindows.get(string_ip).receive(message);
 				receivePacket = new DatagramPacket(new byte[1024], 1024);
 				if(message.equals("bye")){
 					socket.close();
@@ -188,14 +192,6 @@ public class DatagramSendReceive extends Thread {
 			}
 		}
 
-	}
-	
-	private void addReceiveThread(byte[] byte_ip, InetAddress inet, String name){
-		addresses.put(inet, name);		
-		(new DatagramSendReceive(true, port, byte_ip[0], byte_ip[1], byte_ip[2], byte_ip[3])).start();
-		threadCount++;
-		print("number of threads: "+ addresses.size());
-		print(addresses.values().toString());
 	}
 
 	public static DatagramPacket createDatagram(String message, int port, byte[] ip) throws UnknownHostException{

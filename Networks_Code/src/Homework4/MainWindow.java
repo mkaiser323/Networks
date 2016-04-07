@@ -75,8 +75,9 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener{
 			/**
 			 * remember to change the ip addresses to be set dynamically depending on the ip address typed in the MainWindow
 			 */			
-			
-			new ChatWindow(ip, ipTxt.getText(), sendThread, receiveThread);
+			System.out.println("Right before creating window: " +ipTxt.getText());
+			new ChatWindow(ip, ipTxt.getText());
+			System.out.println("Initial Chat Window created");
 		}
 	}
 	
