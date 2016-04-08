@@ -31,10 +31,10 @@ public class ChatWindow extends JFrame implements KeyListener, ActionListener{
 	private DatagramSendReceive sendThread;//this will be used to access the associated thread
 	private DatagramSendReceive receiveThread;//this will be used to access the associated thread
 
-	private String otherIp;
+	private byte[] otherIp;
 	private int port = MainWindow.port;
 
-	public ChatWindow(String otherIp, String ip, int port){
+	public ChatWindow(byte[] otherIp, String ip, int port){
 		
 		String title = "IP: " + ip + " Port: " + port;
 		this.otherIp = otherIp;
@@ -88,7 +88,6 @@ public class ChatWindow extends JFrame implements KeyListener, ActionListener{
 		//next, send it through the socket in the following format: thread.socket.send(datagramPacket)
 		print("sending to port " + port + ", " + "ip " + otherIp);
 		//byte[] otherIp = {(byte)127,(byte)0,(byte)0, (byte)1};
-				
 		DatagramSendReceive.socket.send(DatagramSendReceive.createDatagram(message, port, otherIp));
 		print("message sent to port " + port + ", " + "ip " + otherIp);
 	}

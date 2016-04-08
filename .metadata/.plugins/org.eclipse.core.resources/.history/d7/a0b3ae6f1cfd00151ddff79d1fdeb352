@@ -34,7 +34,7 @@ public class ChatWindow extends JFrame implements KeyListener, ActionListener{
 	private String otherIp;
 	private int port = MainWindow.port;
 
-	public ChatWindow(String otherIp, String ip, int port){
+	public ChatWindow(Strin otherIp, String ip, int port){
 		
 		String title = "IP: " + ip + " Port: " + port;
 		this.otherIp = otherIp;

@@ -104,41 +104,37 @@ public class DatagramSendReceive extends Thread {
 			print("receiving messages");
 			receive();
 		} else {
-			//send();
+			send();
 		}
 	}
 
 
-//	private void send(){
-//		String message;
-//		while(true){
-//			try {
-//				System.out.println("Type a message and hit enter to send. Type 'quit' to quit: ");
-//				Scanner keyboard = new Scanner(System.in);
-//				message = keyboard.nextLine();
-//				if (message.equalsIgnoreCase("quit")){
-//					keyboard.close();
-//					socket.close();
-//					break;
-//				}
-//				print("sending to port " + port + ", " + "ip " + ip);
-//				//DatagramPacket datagramPacket = createDatagram(message, port, ip);
-//				
-//				
-//				
-//				
-//				//print(datagramPacket.toString());
-//				//socket.send(datagramPacket);
-//
-//			} catch (SocketException e) {
-//				e.printStackTrace();
-//			} catch (UnknownHostException e) {
-//				e.printStackTrace();
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//	}
+	private void send(){
+		String message;
+		while(true){
+			try {
+				System.out.println("Type a message and hit enter to send. Type 'quit' to quit: ");
+				Scanner keyboard = new Scanner(System.in);
+				message = keyboard.nextLine();
+				if (message.equalsIgnoreCase("quit")){
+					keyboard.close();
+					socket.close();
+					break;
+				}
+				print("sending to port " + port + ", " + "ip " + ip);
+				DatagramPacket datagramPacket = createDatagram(message, port, ip);
+				print(datagramPacket.toString());
+				socket.send(datagramPacket);
+
+			} catch (SocketException e) {
+				e.printStackTrace();
+			} catch (UnknownHostException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
 
 	private void receive(){
@@ -181,7 +177,7 @@ public class DatagramSendReceive extends Thread {
 					print("****adding new receive thread****");
 					//addReceiveThread(byte_ip, new_IP, name);	
 					//call constructor for Chat window
-					new ChatWindow(string_ip, string_ip, port);
+					new ChatWindow(byte_ip, string_ip, port);
 				}
 
 				String message = new String(receivePacket.getData());
@@ -198,8 +194,8 @@ public class DatagramSendReceive extends Thread {
 		}
 	}
 
-	public static DatagramPacket createDatagram(String message, int port, String ip) throws UnknownHostException{
-		InetAddress ip_address = InetAddress.getByName(ip);//InetAddress.getByAddress(ip);
+	public static DatagramPacket createDatagram(String message, int port, byte[] ip) throws UnknownHostException{
+		InetAddress ip_address = InetAddress.getByAddress(ip);
 		byte[] message_bytes = message.getBytes();
 		DatagramPacket datagramPacket = new DatagramPacket(message_bytes, message_bytes.length, ip_address, port);
 		return datagramPacket;

@@ -104,7 +104,7 @@ public class DatagramSendReceive extends Thread {
 			print("receiving messages");
 			receive();
 		} else {
-			//send();
+			send();
 		}
 	}
 

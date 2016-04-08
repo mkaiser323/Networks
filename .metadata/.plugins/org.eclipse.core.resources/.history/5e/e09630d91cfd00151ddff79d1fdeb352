@@ -104,41 +104,41 @@ public class DatagramSendReceive extends Thread {
 			print("receiving messages");
 			receive();
 		} else {
-			//send();
+			send();
 		}
 	}
 
 
-//	private void send(){
-//		String message;
-//		while(true){
-//			try {
-//				System.out.println("Type a message and hit enter to send. Type 'quit' to quit: ");
-//				Scanner keyboard = new Scanner(System.in);
-//				message = keyboard.nextLine();
-//				if (message.equalsIgnoreCase("quit")){
-//					keyboard.close();
-//					socket.close();
-//					break;
-//				}
-//				print("sending to port " + port + ", " + "ip " + ip);
-//				//DatagramPacket datagramPacket = createDatagram(message, port, ip);
-//				
-//				
-//				
-//				
-//				//print(datagramPacket.toString());
-//				//socket.send(datagramPacket);
-//
-//			} catch (SocketException e) {
-//				e.printStackTrace();
-//			} catch (UnknownHostException e) {
-//				e.printStackTrace();
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//	}
+	private void send(){
+		String message;
+		while(true){
+			try {
+				System.out.println("Type a message and hit enter to send. Type 'quit' to quit: ");
+				Scanner keyboard = new Scanner(System.in);
+				message = keyboard.nextLine();
+				if (message.equalsIgnoreCase("quit")){
+					keyboard.close();
+					socket.close();
+					break;
+				}
+				print("sending to port " + port + ", " + "ip " + ip);
+				DatagramPacket datagramPacket = createDatagram(message, port, ip);
+				
+				
+				
+				
+				print(datagramPacket.toString());
+				socket.send(datagramPacket);
+
+			} catch (SocketException e) {
+				e.printStackTrace();
+			} catch (UnknownHostException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
 
 	private void receive(){
